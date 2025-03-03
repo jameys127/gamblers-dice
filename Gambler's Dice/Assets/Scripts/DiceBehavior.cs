@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class DiceBehavior : MonoBehaviour
 {
-    public Sprite Side1;
-    public Sprite Side2;
-    public Sprite Side3;
-    public Sprite Side4;
-    public Sprite Side5;
-    public Sprite Side6;
+    public Sprite[] sprites;
     public int side;
     
     // Start is called before the first frame update
@@ -25,26 +20,26 @@ public class DiceBehavior : MonoBehaviour
     }
 
     public void RollDiceBehavior(){
-        side = Random.Range(1, 6);
+        side = Random.Range(1, 7);
         Debug.Log(side);
         switch(side){
             case 1:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side1;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
                 break;
             case 2:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side2;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
                 break;
             case 3:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side3;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
                 break;
             case 4:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side4;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
                 break;
             case 5:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side5;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
                 break;
             case 6:
-                gameObject.GetComponent<SpriteRenderer>().sprite = Side6;
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
                 break;
         }
     }
