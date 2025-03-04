@@ -8,7 +8,7 @@ public class DiceManagerScript : MonoBehaviour
     public float leftMostPoint = -20;
     public float rightMostPoint = 30;
     public GameObject die;
-    List<GameObject> dice;
+    private List<GameObject> dice = new List<GameObject>();
     // Start is called before the first frame update
     void Start()
     {
@@ -24,9 +24,12 @@ public class DiceManagerScript : MonoBehaviour
     public void CreateDiceSet(){
         for(int i = 0; i < 6; i++){
             GameObject dummydie = Instantiate(die, new Vector3(leftMostPoint, 0, 0), transform.rotation);
-            // dice.Add(dummydie);
+            dice.Add(dummydie);
             leftMostPoint = leftMostPoint + 10;
         }
+    }
+    public void ReturnDiceSide(){
+        Debug.Log("First die side: " + dice[0].GetComponent<DiceBehavior>().GetSide());
     }
 
 }

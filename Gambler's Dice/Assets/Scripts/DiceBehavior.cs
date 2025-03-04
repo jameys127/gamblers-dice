@@ -35,6 +35,9 @@ public class DiceBehavior : MonoBehaviour
     public void StartRolling(){
         StartCoroutine(Roll(rollSeconds));
     }
+    public int GetSide(){
+        return side;
+    }
 
 
     public void RollDiceBehavior(){
