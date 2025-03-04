@@ -512,13 +512,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb77452dcc4b5848a0edcb1632bcfaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Side1: {fileID: 21300000, guid: f4a30b6c1475a5b40848f2828b8c60b6, type: 3}
-  Side2: {fileID: 21300000, guid: 748adfc1c31595c4db796e247a88a1ea, type: 3}
-  Side3: {fileID: 21300000, guid: b678222bee527174b8e63503d5d224e4, type: 3}
-  Side4: {fileID: 21300000, guid: e751d68a6db519149924bda89a683ff6, type: 3}
-  Side5: {fileID: 21300000, guid: 675dda519b00ddc4794e3b716535d50b, type: 3}
-  Side6: {fileID: 21300000, guid: 08cad62470c04ba4cbd589644c34acbf, type: 3}
+  sprites:
+  - {fileID: 21300000, guid: f4a30b6c1475a5b40848f2828b8c60b6, type: 3}
+  - {fileID: 21300000, guid: 748adfc1c31595c4db796e247a88a1ea, type: 3}
+  - {fileID: 21300000, guid: b678222bee527174b8e63503d5d224e4, type: 3}
+  - {fileID: 21300000, guid: e751d68a6db519149924bda89a683ff6, type: 3}
+  - {fileID: 21300000, guid: 675dda519b00ddc4794e3b716535d50b, type: 3}
+  - {fileID: 21300000, guid: 08cad62470c04ba4cbd589644c34acbf, type: 3}
   side: 0
+  rollSeconds: 0.8
+  timeBetweenRolls: 0.1
 --- !u!50 &1180689554
 Rigidbody2D:
   serializedVersion: 4
