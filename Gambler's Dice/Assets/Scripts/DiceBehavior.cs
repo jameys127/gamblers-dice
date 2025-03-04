@@ -1,19 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DiceBehavior : MonoBehaviour
 {
     public Sprite[] sprites;
     private new SpriteRenderer renderer;
-    public int side;
+    private SpriteRenderer selected;
+    private int side;
     public float rollSeconds;
     public float timeBetweenRolls;
+    private bool isSelected = false;
     // Start is called before the first frame update
     void Start()
     {
         renderer = gameObject.GetComponent<SpriteRenderer>();
+        selected = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -26,8 +30,8 @@ public class DiceBehavior : MonoBehaviour
         float timer = 0f;
         while(timer < seconds){
             renderer.sprite = sprites[Random.Range(0,6)];
-            timer += Time.deltaTime;
-            yield return null;
+            timer += timeBetweenRolls + Time.deltaTime;
+            yield return new WaitForSeconds(0.1f);
         }
         RollDiceBehavior();
     }
@@ -37,6 +41,17 @@ public class DiceBehavior : MonoBehaviour
     }
     public int GetSide(){
         return side;
+    }
+    void OnMouseUpAsButton(){
+        if(!isSelected){
+            selected.enabled = true;
+            Debug.Log("selected");
+            isSelected = true;
+        } else {
+            selected.enabled = false;
+            Debug.Log("unselected");
+            isSelected = false;
+        }
     }
 
 
