@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class LogicScript : MonoBehaviour
 {
-    public GameObject die;
+    public GameObject diceManger;
+    public GameObject startButton;
     public void RollDice(){
-        die.GetComponent<DiceBehavior>().StartRolling();
+        var dice = GameObject.FindGameObjectsWithTag("Dice");
+        foreach(var die in dice){
+            die.GetComponent<DiceBehavior>().StartRolling();
+        }
+    }
+
+    public void StartTheGame(){
+        diceManger.GetComponent<DiceManagerScript>().CreateDiceSet();
+        startButton.SetActive(false);
     }
 }

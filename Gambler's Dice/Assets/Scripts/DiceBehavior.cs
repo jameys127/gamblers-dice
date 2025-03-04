@@ -6,13 +6,14 @@ using UnityEngine;
 public class DiceBehavior : MonoBehaviour
 {
     public Sprite[] sprites;
+    private new SpriteRenderer renderer;
     public int side;
     public float rollSeconds;
     public float timeBetweenRolls;
     // Start is called before the first frame update
     void Start()
     {
-
+        renderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -24,7 +25,7 @@ public class DiceBehavior : MonoBehaviour
     public IEnumerator Roll(float seconds){
         float timer = 0f;
         while(timer < seconds){
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0,6)];
+            renderer.sprite = sprites[Random.Range(0,6)];
             timer += Time.deltaTime;
             yield return null;
         }
@@ -41,22 +42,22 @@ public class DiceBehavior : MonoBehaviour
         Debug.Log(side);
         switch(side){
             case 1:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+                renderer.sprite = sprites[0];
                 break;
             case 2:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+                renderer.sprite = sprites[1];
                 break;
             case 3:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
+                renderer.sprite = sprites[2];
                 break;
             case 4:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
+                renderer.sprite = sprites[3];
                 break;
             case 5:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[4];
+                renderer.sprite = sprites[4];
                 break;
             case 6:
-                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[5];
+                renderer.sprite = sprites[5];
                 break;
         }
     }
