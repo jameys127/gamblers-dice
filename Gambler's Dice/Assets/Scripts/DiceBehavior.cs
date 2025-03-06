@@ -13,9 +13,11 @@ public class DiceBehavior : MonoBehaviour
     public float rollSeconds;
     public float timeBetweenRolls;
     private bool isSelected = false;
+    public GameObject DiceManager;
     // Start is called before the first frame update
     void Start()
     {
+        DiceManager = GameObject.FindGameObjectWithTag("DiceManager");
         renderer = gameObject.GetComponent<SpriteRenderer>();
         selected = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
@@ -45,8 +47,8 @@ public class DiceBehavior : MonoBehaviour
     void OnMouseUpAsButton(){
         if(!isSelected){
             selected.enabled = true;
-            Debug.Log("selected");
             isSelected = true;
+            DiceManager.GetComponent<DiceManagerScript>().setDicePoint(side);
         } else {
             selected.enabled = false;
             Debug.Log("unselected");

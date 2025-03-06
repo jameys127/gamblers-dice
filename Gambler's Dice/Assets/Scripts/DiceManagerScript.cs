@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DiceManagerScript : MonoBehaviour
@@ -9,10 +10,18 @@ public class DiceManagerScript : MonoBehaviour
     public float rightMostPoint = 30;
     public GameObject die;
     private List<GameObject> dice = new List<GameObject>();
+    private int dicePoint;
     // Start is called before the first frame update
     void Start()
     {
         
+    }
+
+    public int getDicePoitn(){
+        return dicePoint;
+    }
+    public void setDicePoint(int point){
+        dicePoint = point;
     }
 
     // Update is called once per frame
@@ -30,6 +39,7 @@ public class DiceManagerScript : MonoBehaviour
     }
     public void ReturnDiceSide(){
         Debug.Log("First die side: " + dice[0].GetComponent<DiceBehavior>().GetSide());
+        Debug.Log("Selected die number: " + dicePoint);
     }
 
 }
