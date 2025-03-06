@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class DiceBehavior : MonoBehaviour
 {
+    private int id;
     public Sprite[] sprites;
     private new SpriteRenderer renderer;
     private SpriteRenderer selected;
@@ -44,14 +46,18 @@ public class DiceBehavior : MonoBehaviour
     public int GetSide(){
         return side;
     }
+    public void setId(int uniqueId){
+        id = uniqueId;
+    }
     void OnMouseUpAsButton(){
         if(!isSelected){
             selected.enabled = true;
             isSelected = true;
-            DiceManager.GetComponent<DiceManagerScript>().setDicePoint(side);
+            DiceManager.GetComponent<DiceManagerScript>().SetDiceSelectedForPoints(id, side);
         } else {
             selected.enabled = false;
-            Debug.Log("unselected");
+            DiceManager.GetComponent<DiceManagerScript>().RemoveDiceSelectedForPoints(id);
+            // Debug.Log("unselected");
             isSelected = false;
         }
     }
@@ -59,7 +65,6 @@ public class DiceBehavior : MonoBehaviour
 
     public void RollDiceBehavior(){
         side = Random.Range(1, 7);
-        Debug.Log(side);
         switch(side){
             case 1:
                 renderer.sprite = sprites[0];

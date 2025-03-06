@@ -13,6 +13,11 @@ public class LogicScript : MonoBehaviour
         }
     }
 
+    public void DisplayPoints(){
+        int point = diceManger.GetComponent<DiceManagerScript>().CollectPoints();
+        Debug.Log("Points: " + point);
+    }
+
     public void StartTheGame(){
         diceManger.GetComponent<DiceManagerScript>().CreateDiceSet();
         startButton.SetActive(false);
