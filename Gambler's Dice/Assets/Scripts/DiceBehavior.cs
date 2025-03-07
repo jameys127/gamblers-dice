@@ -15,11 +15,14 @@ public class DiceBehavior : MonoBehaviour
     public float rollSeconds;
     public float timeBetweenRolls;
     private bool isSelected = false;
-    public GameObject DiceManager;
+    public DiceManagerScript DiceManager;
+    public LogicScript LogicScript;
+
     // Start is called before the first frame update
     void Start()
     {
-        DiceManager = GameObject.FindGameObjectWithTag("DiceManager");
+        LogicScript = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
+        DiceManager = GameObject.FindGameObjectWithTag("DiceManager").GetComponent<DiceManagerScript>();
         renderer = gameObject.GetComponent<SpriteRenderer>();
         selected = transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
@@ -30,7 +33,7 @@ public class DiceBehavior : MonoBehaviour
         
     }
 
-    public IEnumerator Roll(float seconds){
+    private IEnumerator Roll(float seconds){
         float timer = 0f;
         while(timer < seconds){
             renderer.sprite = sprites[Random.Range(0,6)];
@@ -53,10 +56,12 @@ public class DiceBehavior : MonoBehaviour
         if(!isSelected){
             selected.enabled = true;
             isSelected = true;
-            DiceManager.GetComponent<DiceManagerScript>().SetDiceSelectedForPoints(id, side);
+            DiceManager.SetDiceSelectedForPoints(id, side);
+            LogicScript.SetSelectedCount(1);
         } else {
             selected.enabled = false;
-            DiceManager.GetComponent<DiceManagerScript>().RemoveDiceSelectedForPoints(id);
+            DiceManager.RemoveDiceSelectedForPoints(id);
+            LogicScript.SetSelectedCount(-1);
             // Debug.Log("unselected");
             isSelected = false;
         }
@@ -68,22 +73,29 @@ public class DiceBehavior : MonoBehaviour
         switch(side){
             case 1:
                 renderer.sprite = sprites[0];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
             case 2:
                 renderer.sprite = sprites[1];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
             case 3:
                 renderer.sprite = sprites[2];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
             case 4:
                 renderer.sprite = sprites[3];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
             case 5:
                 renderer.sprite = sprites[4];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
             case 6:
                 renderer.sprite = sprites[5];
+                DiceManager.SetDiceSelectedForPoints(id, side);
                 break;
         }
+        LogicScript.NotifyRollComplete();
     }
 }
