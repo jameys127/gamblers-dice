@@ -68,6 +68,10 @@ public class DiceManagerScript : MonoBehaviour
         };
     }
 
+    public List<GameObject> getDice(){
+        return dice;
+    }
+
     public Dictionary<int, int> GetDiceSelectedForPoints(){
         return diceCombo;
     }
@@ -125,18 +129,28 @@ public class DiceManagerScript : MonoBehaviour
         }
         if(count.Count == 5 &&
         count.TryGetValue(1, out _) &&
+        count[1] == 1 &&
         count.TryGetValue(2, out _) &&
+        count[2] == 1 &&
         count.TryGetValue(3, out _) &&
+        count[3] == 1 &&
         count.TryGetValue(4, out _) &&
-        count.TryGetValue(5, out _)){
+        count[4] == 1 &&
+        count.TryGetValue(5, out _) &&
+        count[5] == 1){
             return 500;
         }
         if(count.Count == 5 &&
         count.TryGetValue(2, out _) &&
+        count[2] == 1 &&
         count.TryGetValue(3, out _) &&
+        count[3] == 1 &&
         count.TryGetValue(4, out _) &&
+        count[4] == 1 &&
         count.TryGetValue(5, out _) &&
-        count.TryGetValue(6, out _)){
+        count[5] == 1 &&
+        count.TryGetValue(6, out _) &&
+        count[6] == 1){
             return 750;
         }
 
@@ -163,4 +177,5 @@ public class DiceManagerScript : MonoBehaviour
             return 0;
         }
     }
+    
 }
