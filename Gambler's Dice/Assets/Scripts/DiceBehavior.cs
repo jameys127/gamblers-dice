@@ -55,12 +55,13 @@ public class DiceBehavior : MonoBehaviour
     }
 
     void OnMouseUpAsButton(){
-        if(!isSelected){
+        bool canBeSelected = LogicScript.GetIfDiceCanBeSelected();
+        if(!isSelected && canBeSelected){
             selected.enabled = true;
             isSelected = true;
             LogicScript.SetDiceSelectedForPoints(id, side);
             LogicScript.ShowPointsForCollecting();
-        } else {
+        } else if(canBeSelected) {
             selected.enabled = false;
             LogicScript.RemoveDiceSelectedForPoints(id);
             LogicScript.ShowPointsForCollecting();

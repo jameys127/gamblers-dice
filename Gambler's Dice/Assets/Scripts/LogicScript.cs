@@ -15,6 +15,7 @@ public class LogicScript : MonoBehaviour
     public TextMeshProUGUI softScore;
     public TextMeshProUGUI hardScore;
     public List<GameObject> uiElements;
+    private bool canBeSelected = false;
     // END UI GLOBAL VARIABLES
 
     // GAME OBJECTS AND DICE COUNTERS
@@ -107,6 +108,8 @@ public class LogicScript : MonoBehaviour
             nextAvailabelId++;
             leftMostPoint = leftMostPoint + 10;
         }
+        leftMostPoint = -20;
+        diceInPlay = 6;
     }
 
     public void MoveReducedDiceSet(){
@@ -161,6 +164,9 @@ public class LogicScript : MonoBehaviour
     }
     public void RemoveDiceSelectedForPoints(int id){
         diceSelectedForPoints.Remove(id);
+    }
+    public bool GetIfDiceCanBeSelected(){
+        return canBeSelected;
     }
 
     // Collecting points for scoring
@@ -289,6 +295,7 @@ public class LogicScript : MonoBehaviour
         }
         if(diceCombo.Count == 6){
             Debug.Log("broke cuz straight");
+            canBeSelected = true;
             yield break;
         }
         if(diceCombo.Count == 5 &&
@@ -298,6 +305,7 @@ public class LogicScript : MonoBehaviour
         diceCombo.TryGetValue(4, out _) &&
         diceCombo.TryGetValue(5, out _)){
             Debug.Log("broke cuz straight 500");
+            canBeSelected = true;
             yield break;
         }
         if(diceCombo.Count == 5 &&
@@ -307,14 +315,17 @@ public class LogicScript : MonoBehaviour
         diceCombo.TryGetValue(5, out _) &&
         diceCombo.TryGetValue(6, out _)){
             Debug.Log("broke cuz straight 750");
+            canBeSelected = true;
             yield break;
         }
         foreach(var key in diceCombo.Keys){
             if(key == 1 || key == 5){
                 Debug.Log("broke cuz 1 or 5");
+            canBeSelected = true;
                 yield break;
             }else if(diceCombo[key] >= 3){
                 Debug.Log("broke cuz frequency >= 3");
+            canBeSelected = true;
                 yield break;
             }
         }
@@ -336,7 +347,6 @@ public class LogicScript : MonoBehaviour
         foreach(var ui in uiElements){
             ui.SetActive(true);
         }
-        diceInPlay = 6;
     }
     public void RestartGame(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -377,8 +387,14 @@ public class LogicScript : MonoBehaviour
                 dice.RemoveAt(index);
                 diceInPlay--;
             }
+            passButton.SetActive(false);
+            rollAgainButton.SetActive(false);
+            canBeSelected = false;
             MoveReducedDiceSet();
             RollDiceButton.SetActive(true);
+        }
+        if(diceInPlay == 0){
+            CreateDiceSet();
         }
     }
 
