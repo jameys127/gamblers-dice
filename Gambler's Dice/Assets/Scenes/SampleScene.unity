@@ -406,7 +406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &62523438
 RectTransform:
   m_ObjectHideFlags: 0
@@ -673,7 +673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &86046188
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1216,7 +1216,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &696844744
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1713,12 +1713,12 @@ GameObject:
   - component: {fileID: 1140559900}
   - component: {fileID: 1140559899}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: RoundNumber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1140559898
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2163,16 +2163,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bc8e6cec7d371c42a1e750036e4b6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerXPoint: 5
   leftMostPoint: -20
-  rightMostPoint: 30
   softScore: {fileID: 1783685172}
   hardScore: {fileID: 62523439}
+  uiElements:
+  - {fileID: 696844743}
+  - {fileID: 86046187}
+  - {fileID: 1954945191}
+  - {fileID: 62523437}
+  - {fileID: 1783685170}
+  - {fileID: 1912510298}
+  - {fileID: 1140559897}
   die: {fileID: 4200671857242446458, guid: db653b48b9c2c08428d660df5f6383d5, type: 3}
   gameOver: {fileID: 1415836078}
   startButton: {fileID: 67816644}
   passButton: {fileID: 1395542790}
   rollAgainButton: {fileID: 17308067}
+  RollDiceButton: {fileID: 696844743}
 --- !u!4 &1635480237
 Transform:
   m_ObjectHideFlags: 0
@@ -2339,7 +2346,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1783685171
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2782,12 +2789,12 @@ GameObject:
   - component: {fileID: 1912510301}
   - component: {fileID: 1912510300}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Round
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1912510299
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2921,7 +2928,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1954945192
 RectTransform:
   m_ObjectHideFlags: 0

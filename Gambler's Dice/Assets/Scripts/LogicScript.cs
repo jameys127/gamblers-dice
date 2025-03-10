@@ -10,13 +10,11 @@ public class LogicScript : MonoBehaviour
 {
     // UI GLOBAL VARIABLES
     private int nextAvailabelId = 0;
-    public float centerXPoint = 5;
     public float leftMostPoint = -20;
-    public float rightMostPoint = 30;
-    private int softScorePoints;
     private int hardScorePoints;
     public TextMeshProUGUI softScore;
     public TextMeshProUGUI hardScore;
+    public List<GameObject> uiElements;
     // END UI GLOBAL VARIABLES
 
     // GAME OBJECTS AND DICE COUNTERS
@@ -28,6 +26,7 @@ public class LogicScript : MonoBehaviour
     public GameObject startButton;
     public GameObject passButton;
     public GameObject rollAgainButton;
+    public GameObject RollDiceButton;
     //END GAME OBJECTS AND DICE COUNTERS
     
     //DICTIONARIES FOR DICE AND POINTS
@@ -144,6 +143,7 @@ public class LogicScript : MonoBehaviour
         foreach(var die in diceToRoll){
             die.GetComponent<DiceBehavior>().StartRolling();
         }
+        RollDiceButton.SetActive(false);
     }
 
     // Getters and Setters for dice
@@ -333,6 +333,9 @@ public class LogicScript : MonoBehaviour
     public void StartTheGame(){
         CreateDiceSet();
         startButton.SetActive(false);
+        foreach(var ui in uiElements){
+            ui.SetActive(true);
+        }
         diceInPlay = 6;
     }
     public void RestartGame(){
@@ -375,6 +378,7 @@ public class LogicScript : MonoBehaviour
                 diceInPlay--;
             }
             MoveReducedDiceSet();
+            RollDiceButton.SetActive(true);
         }
     }
 
