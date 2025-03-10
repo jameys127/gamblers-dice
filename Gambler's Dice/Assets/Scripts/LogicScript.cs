@@ -139,6 +139,7 @@ public class LogicScript : MonoBehaviour
     }
 
     public void RollDice(){
+        diceSelectedForPoints.Clear();
         var diceToRoll = GameObject.FindGameObjectsWithTag("Dice");
         foreach(var die in diceToRoll){
             die.GetComponent<DiceBehavior>().StartRolling();
@@ -179,14 +180,16 @@ public class LogicScript : MonoBehaviour
         if(count.Count == 6){
             return 1500;
         }
-        if(count == fiveHundredComboWithStragglerFive){
-            return 550;
-        }
-        if(count == fiveHundredComboWithStragglerOne){
-            return 600;
-        }
-        if(count == sevenHundredComboWithStragglerFive){
-            return 800;
+        if(count.Count == 5){
+            if(CheckStragglersForPoints(count, fiveHundredComboWithStragglerFive)){
+                return 550;
+            }
+            if(CheckStragglersForPoints(count, fiveHundredComboWithStragglerOne)){
+                return 600;
+            }
+            if(CheckStragglersForPoints(count, sevenHundredComboWithStragglerFive)){
+                return 800;
+            }
         }
         if(count.Count == 5 &&
         count.TryGetValue(1, out _) &&
@@ -236,6 +239,24 @@ public class LogicScript : MonoBehaviour
             return totalScore;
         }else{
             return 0;
+        }
+    }
+
+    public bool CheckStragglersForPoints(Dictionary<int, int> count, Dictionary<int, int> pointTotal){
+        int correctCounter = 0;
+        foreach(var key in count.Keys){
+            int valueCount;
+            int valuePoint;
+            count.TryGetValue(key, out valueCount);
+            pointTotal.TryGetValue(key, out valuePoint);
+            if(valueCount == valuePoint){
+                correctCounter++;
+            }
+        }
+        if(correctCounter == 5){
+            return true;
+        }else {
+            return false;
         }
     }
 
@@ -354,6 +375,26 @@ public class LogicScript : MonoBehaviour
                 diceInPlay--;
             }
             MoveReducedDiceSet();
+        }
+    }
+
+
+
+//*************************************************************************
+//------TESTING METHODS------
+    public void TestingStragglers(){
+        diceSelectedForPoints.Clear();
+        var diceToRoll = GameObject.FindGameObjectsWithTag("Dice");
+        int counter = 1;
+        foreach(var die in diceToRoll){
+            if(counter == 1){
+                die.GetComponent<DiceBehavior>().SetDiceSide(5);
+            }
+            if(counter >= 2){
+                die.GetComponent<DiceBehavior>().SetDiceSide(counter);
+            }
+            counter++;
+
         }
     }
 }

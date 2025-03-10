@@ -100,4 +100,12 @@ public class DiceBehavior : MonoBehaviour
         }
         LogicScript.NotifyRollComplete();
     }
+
+
+//******************************************************************************
+// ------TESTING METHODS------
+    public void SetDiceSide(int value){
+        side = value;
+        renderer.sprite = sprites[value - 1];
+    }
 }
