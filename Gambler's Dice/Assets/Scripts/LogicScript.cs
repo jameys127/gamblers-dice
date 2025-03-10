@@ -103,10 +103,38 @@ public class LogicScript : MonoBehaviour
     public void CreateDiceSet(){
         for(int i = 0; i < 6; i++){
             GameObject dummydie = Instantiate(die, new Vector3(leftMostPoint, 0, 0), transform.rotation);
-            dice.Add(dummydie);
             dummydie.GetComponent<DiceBehavior>().setId(nextAvailabelId);
+            dice.Add(dummydie);
             nextAvailabelId++;
             leftMostPoint = leftMostPoint + 10;
+        }
+    }
+
+    public void MoveReducedDiceSet(){
+        if(dice.Count == 1){
+            dice[0].transform.position = new Vector3(5, 0, 0);
+        }
+        if(dice.Count == 2){
+            dice[0].transform.position = new Vector3(0, 0, 0);
+            dice[1].transform.position = new Vector3(10, 0, 0);
+        }
+        if(dice.Count == 3){
+            dice[0].transform.position = new Vector3(-5, 0, 0);
+            dice[1].transform.position = new Vector3(5, 0, 0);
+            dice[2].transform.position = new Vector3(15, 0, 0);
+        }
+        if(dice.Count == 4){
+            dice[0].transform.position = new Vector3(-10, 0, 0);
+            dice[1].transform.position = new Vector3(0, 0, 0);
+            dice[2].transform.position = new Vector3(10, 0, 0);
+            dice[3].transform.position = new Vector3(20, 0, 0);
+        }
+        if(dice.Count == 5){
+            dice[0].transform.position = new Vector3(-15, 0, 0);
+            dice[1].transform.position = new Vector3(-5, 0, 0);
+            dice[2].transform.position = new Vector3(5, 0, 0);
+            dice[3].transform.position = new Vector3(15, 0, 0);
+            dice[4].transform.position = new Vector3(25, 0, 0);
         }
     }
 
@@ -118,6 +146,15 @@ public class LogicScript : MonoBehaviour
     }
 
     // Getters and Setters for dice
+    public int GetDieWithId(int id){
+        for(int i = 0; i < dice.Count; i++){
+            GameObject die = dice[i];
+            if(die.GetComponent<DiceBehavior>().getId() == id){
+                return i;
+            }
+        }
+        return -1;
+    }
     public void SetDiceSelectedForPoints(int id, int side){
         diceSelectedForPoints.Add(id, side);
     }
@@ -307,11 +344,16 @@ public class LogicScript : MonoBehaviour
         Debug.Log("score: " + score);
         int points = int.Parse(score);
         if(points != 0){
-            hardScore.text += points.ToString();
             hardScorePoints += points;
+            hardScore.text = hardScorePoints.ToString();
+            softScore.text = "0";
             foreach(var keys in diceSelectedForPoints.Keys){
-                
+                int index = GetDieWithId(keys);
+                Destroy(dice[index]);
+                dice.RemoveAt(index);
+                diceInPlay--;
             }
+            MoveReducedDiceSet();
         }
     }
 }
