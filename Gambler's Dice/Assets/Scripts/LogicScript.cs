@@ -12,8 +12,8 @@ public class LogicScript : MonoBehaviour
     private int round = 1;
     private int nextAvailabelId = 0;
     public float leftMostPoint = -20;
-    private int hardScorePoints;
-    private int scorePoints;
+    private int hardScorePoints = 0;
+    private int scorePoints = 0;
     public TextMeshProUGUI softScoreText;
     public TextMeshProUGUI hardScoreText;
     public TextMeshProUGUI scoreText;
@@ -410,7 +410,7 @@ public class LogicScript : MonoBehaviour
             hardScorePoints += points;
             hardScoreText.text = "0";
             scorePoints += hardScorePoints;
-            scoreText.text = points.ToString();
+            scoreText.text = scorePoints.ToString();
             softScoreText.text = "0";
             hardScorePoints = 0;
         }
@@ -425,13 +425,13 @@ public class LogicScript : MonoBehaviour
         // Changing text to opponent
         if(CurrentlyOpponentTurn){
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Your Turn";
-            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn";
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nScore: " + scorePoints;
             CurrentlyOpponentTurn = false;
             round++;
             uiElements[2].GetComponent<TextMeshProUGUI>().text = round.ToString();
         } else {
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Opponent's Turn";
-            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn";
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn\nScore: " + scorePoints;
             CurrentlyOpponentTurn = true;
         }
 
