@@ -8,14 +8,19 @@ using UnityEngine.UI;
 
 public class LogicScript : MonoBehaviour
 {
-    // UI GLOBAL VARIABLES
+    // UI AND GLOBAL VARIABLES
+    private int round = 1;
     private int nextAvailabelId = 0;
     public float leftMostPoint = -20;
     private int hardScorePoints;
-    public TextMeshProUGUI softScore;
-    public TextMeshProUGUI hardScore;
+    private int scorePoints;
+    public TextMeshProUGUI softScoreText;
+    public TextMeshProUGUI hardScoreText;
+    public TextMeshProUGUI scoreText;
+    public GameObject switchingSides;
     public List<GameObject> uiElements;
     private bool canBeSelected = false;
+    private bool CurrentlyOpponentTurn = false;
     // END UI GLOBAL VARIABLES
 
     // GAME OBJECTS AND DICE COUNTERS
@@ -355,12 +360,12 @@ public class LogicScript : MonoBehaviour
     public void ShowPointsForCollecting(){
         int points = CollectPoints();
         if(points > 0){
-            softScore.text = points.ToString();
+            softScoreText.text = points.ToString();
             passButton.SetActive(true);
             rollAgainButton.SetActive(true);
         }
         if(points == 0){
-            softScore.text = points.ToString();
+            softScoreText.text = points.ToString();
             passButton.SetActive(false);
             rollAgainButton.SetActive(false);
         }
@@ -374,13 +379,13 @@ public class LogicScript : MonoBehaviour
 
 
     public void ScoreAndContinue(){
-        String score = softScore.text.ToString();
+        String score = softScoreText.text.ToString();
         Debug.Log("score: " + score);
         int points = int.Parse(score);
         if(points != 0){
             hardScorePoints += points;
-            hardScore.text = hardScorePoints.ToString();
-            softScore.text = "0";
+            hardScoreText.text = hardScorePoints.ToString();
+            softScoreText.text = "0";
             foreach(var keys in diceSelectedForPoints.Keys){
                 int index = GetDieWithId(keys);
                 Destroy(dice[index]);
@@ -396,6 +401,69 @@ public class LogicScript : MonoBehaviour
         if(diceInPlay == 0){
             CreateDiceSet();
         }
+    }
+
+    public void ScoreAndPass(){
+        String score = softScoreText.text.ToString();
+        int points = int.Parse(score);
+        if(points != 0){
+            hardScorePoints += points;
+            hardScoreText.text = "0";
+            scorePoints += hardScorePoints;
+            scoreText.text = points.ToString();
+            softScoreText.text = "0";
+            hardScorePoints = 0;
+        }
+        StartCoroutine(OpponentTurn());
+    }
+
+    private IEnumerator OpponentTurn(){
+        float seconds = 2f;
+        float timer = 0f;
+        float something = 0.1f;
+
+        // Changing text to opponent
+        if(CurrentlyOpponentTurn){
+            uiElements[5].GetComponent<TextMeshProUGUI>().text = "Your Turn";
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn";
+            CurrentlyOpponentTurn = false;
+            round++;
+            uiElements[2].GetComponent<TextMeshProUGUI>().text = round.ToString();
+        } else {
+            uiElements[5].GetComponent<TextMeshProUGUI>().text = "Opponent's Turn";
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn";
+            CurrentlyOpponentTurn = true;
+        }
+
+        // Destroying previous dice to start anew
+        foreach(var x in dice){
+            Destroy(x);
+        }
+        dice.Clear();
+
+        // Removing UI elements
+        foreach(var ui in uiElements){
+            ui.SetActive(false);
+        }
+        passButton.SetActive(false);
+        rollAgainButton.SetActive(false);
+
+        // Switching sides screen for 2 seconds
+        switchingSides.SetActive(true);
+        while (timer < seconds){
+            timer += something + Time.deltaTime;
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        // UI elements are activated again
+        foreach(var ui in uiElements){
+            ui.SetActive(true);
+        }
+        canBeSelected = false;
+
+        // Create new set of dice
+        CreateDiceSet();
+        switchingSides.SetActive(false);
     }
 
 
