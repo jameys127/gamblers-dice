@@ -156,6 +156,9 @@ public class LogicScript : MonoBehaviour
     }
 
     // Getters and Setters for dice
+    public List<GameObject> GetDiceList(){
+        return dice;
+    }
     public int GetDieWithId(int id){
         for(int i = 0; i < dice.Count; i++){
             GameObject die = dice[i];

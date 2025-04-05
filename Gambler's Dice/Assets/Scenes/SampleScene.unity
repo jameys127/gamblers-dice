@@ -429,6 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logicManager: {fileID: 1635480235}
+  timeBetweenSelections: 0.5
 --- !u!4 &207569530
 Transform:
   m_ObjectHideFlags: 0
