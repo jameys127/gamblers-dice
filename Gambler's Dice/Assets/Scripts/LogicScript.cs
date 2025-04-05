@@ -25,6 +25,7 @@ public class LogicScript : MonoBehaviour
 
     // GAME OBJECTS AND DICE COUNTERS
     public GameObject die;
+    public GameObject Opponent;
     private List<GameObject> dice = new List<GameObject>();
     private int diceInPlay;
     private int rollingCounter;
@@ -463,7 +464,9 @@ public class LogicScript : MonoBehaviour
 
         // Create new set of dice
         CreateDiceSet();
+        RollDiceButton.SetActive(false);
         switchingSides.SetActive(false);
+        Opponent.GetComponent<OpponentScript>().OpponentTurn();
     }
 
 
