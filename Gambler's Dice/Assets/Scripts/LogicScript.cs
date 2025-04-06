@@ -14,9 +14,18 @@ public class LogicScript : MonoBehaviour
     public float leftMostPoint = -20;
     private int hardScorePoints = 0;
     private int scorePoints = 0;
+    private int oppScorePoints = 0;
+
+    // Player UI
     public TextMeshProUGUI softScoreText;
     public TextMeshProUGUI hardScoreText;
     public TextMeshProUGUI scoreText;
+
+    //Opponent UI
+    public TextMeshProUGUI OppSoftScore;
+    public TextMeshProUGUI OppHardScore;
+    public TextMeshProUGUI OppScore;
+
     public GameObject switchingSides;
     public List<GameObject> uiElements;
     private bool canBeSelected = false;
@@ -363,13 +372,18 @@ public class LogicScript : MonoBehaviour
 
     public void ShowPointsForCollecting(){
         int points = CollectPoints();
-        if(points > 0){
+        if(points > 0 && CurrentlyOpponentTurn == false){
             softScoreText.text = points.ToString();
+            passButton.SetActive(true);
+            rollAgainButton.SetActive(true);
+        }else{
+            OppSoftScore.text = points.ToString();
             passButton.SetActive(true);
             rollAgainButton.SetActive(true);
         }
         if(points == 0){
             softScoreText.text = points.ToString();
+            OppSoftScore.text = points.ToString();
             passButton.SetActive(false);
             rollAgainButton.SetActive(false);
         }
@@ -383,13 +397,29 @@ public class LogicScript : MonoBehaviour
 
 
     public void ScoreAndContinue(){
-        String score = softScoreText.text.ToString();
+        int score = CollectPoints();
         Debug.Log("score: " + score);
-        int points = int.Parse(score);
-        if(points != 0){
+        int points = score;
+        if(points != 0 && CurrentlyOpponentTurn == false){
             hardScorePoints += points;
             hardScoreText.text = hardScorePoints.ToString();
             softScoreText.text = "0";
+            foreach(var keys in diceSelectedForPoints.Keys){
+                int index = GetDieWithId(keys);
+                Destroy(dice[index]);
+                dice.RemoveAt(index);
+                diceInPlay--;
+            }
+            passButton.SetActive(false);
+            rollAgainButton.SetActive(false);
+            canBeSelected = false;
+            MoveReducedDiceSet();
+            RollDiceButton.SetActive(true);
+        }
+        if(points != 0 && CurrentlyOpponentTurn){
+            hardScorePoints += points;
+            OppHardScore.text = hardScorePoints.ToString();
+            OppSoftScore.text = "0";
             foreach(var keys in diceSelectedForPoints.Keys){
                 int index = GetDieWithId(keys);
                 Destroy(dice[index]);
@@ -408,14 +438,21 @@ public class LogicScript : MonoBehaviour
     }
 
     public void ScoreAndPass(){
-        String score = softScoreText.text.ToString();
-        int points = int.Parse(score);
-        if(points != 0){
+        int score = CollectPoints();
+        int points = score;
+        if(points != 0 && CurrentlyOpponentTurn == false){
             hardScorePoints += points;
             hardScoreText.text = "0";
             scorePoints += hardScorePoints;
             scoreText.text = scorePoints.ToString();
             softScoreText.text = "0";
+            hardScorePoints = 0;
+        } else {
+            hardScorePoints += points;
+            OppHardScore.text = "0";
+            oppScorePoints += hardScorePoints;
+            OppScore.text = oppScorePoints.ToString();
+            OppSoftScore.text = "0";
             hardScorePoints = 0;
         }
         StartCoroutine(OpponentTurn());
@@ -429,7 +466,7 @@ public class LogicScript : MonoBehaviour
         // Changing text to opponent
         if(CurrentlyOpponentTurn){
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Your Turn";
-            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nScore: " + scorePoints;
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nScore: " + oppScorePoints;
             CurrentlyOpponentTurn = false;
             round++;
             uiElements[2].GetComponent<TextMeshProUGUI>().text = round.ToString();
@@ -467,9 +504,9 @@ public class LogicScript : MonoBehaviour
 
         // Create new set of dice
         CreateDiceSet();
-        RollDiceButton.SetActive(false);
+        // RollDiceButton.SetActive(false);
         switchingSides.SetActive(false);
-        Opponent.GetComponent<OpponentScript>().OpponentTurn();
+        // Opponent.GetComponent<OpponentScript>().OpponentTurn();
     }
 
 
