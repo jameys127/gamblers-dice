@@ -107,6 +107,7 @@ public class LogicScript : MonoBehaviour
             {5, 2},
             {6, 1},
         };
+        StartTheGame();
 
     } // void Start()
 
