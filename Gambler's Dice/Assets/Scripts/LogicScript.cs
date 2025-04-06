@@ -463,9 +463,27 @@ public class LogicScript : MonoBehaviour
         if(CheckIfSomeoneWon()){
             if(CurrentlyOpponentTurn){
                 gameOver.SetActive(true);
+                foreach(var ui in uiElements){
+                    ui.SetActive(false);
+                }
+                passButton.SetActive(false);
+                rollAgainButton.SetActive(false);
+                foreach(var x in dice){
+                    Destroy(x);
+                }
+                dice.Clear();
                 return;
             }else{
                 youWon.SetActive(true);
+                foreach(var ui in uiElements){
+                    ui.SetActive(false);
+                }
+                passButton.SetActive(false);
+                rollAgainButton.SetActive(false);
+                foreach(var x in dice){
+                    Destroy(x);
+                }
+                dice.Clear();
                 return;
             }
         }
@@ -505,6 +523,8 @@ public class LogicScript : MonoBehaviour
         foreach(var ui in uiElements){
             ui.SetActive(false);
         }
+        passButton.SetActive(false);
+        rollAgainButton.SetActive(false);
 
         if(busted){
             bustPanel.SetActive(true);
@@ -521,8 +541,7 @@ public class LogicScript : MonoBehaviour
         }
         dice.Clear();
 
-        passButton.SetActive(false);
-        rollAgainButton.SetActive(false);
+        
 
         // Switching sides screen for 2 seconds
         if(!busted){
