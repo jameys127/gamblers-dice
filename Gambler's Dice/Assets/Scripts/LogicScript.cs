@@ -12,6 +12,7 @@ public class LogicScript : MonoBehaviour
     private int round = 1;
     private int nextAvailabelId = 0;
     public float leftMostPoint = -20;
+    private int pointsToWin = 1000;
     private int hardScorePoints = 0;
     private int scorePoints = 0;
     private int oppScorePoints = 0;
@@ -27,9 +28,11 @@ public class LogicScript : MonoBehaviour
     public TextMeshProUGUI OppScore;
 
     public GameObject switchingSides;
+    public GameObject bustPanel;
     public List<GameObject> uiElements;
     private bool canBeSelected = false;
     private bool CurrentlyOpponentTurn = false;
+    private bool busted = false;
     // END UI GLOBAL VARIABLES
 
     // GAME OBJECTS AND DICE COUNTERS
@@ -39,6 +42,7 @@ public class LogicScript : MonoBehaviour
     private int diceInPlay;
     private int rollingCounter;
     public GameObject gameOver;
+    public GameObject youWon;
     public GameObject startButton;
     public GameObject passButton;
     public GameObject rollAgainButton;
@@ -347,7 +351,8 @@ public class LogicScript : MonoBehaviour
                 yield break;
             }
         }
-        gameOver.SetActive(true);
+        busted = true;
+        StartCoroutine(OpponentTurn());
     }
     //---END BUST CHECK---
 
@@ -455,13 +460,33 @@ public class LogicScript : MonoBehaviour
             OppSoftScore.text = "0";
             hardScorePoints = 0;
         }
+        if(CheckIfSomeoneWon()){
+            if(CurrentlyOpponentTurn){
+                gameOver.SetActive(true);
+                return;
+            }else{
+                youWon.SetActive(true);
+                return;
+            }
+        }
         StartCoroutine(OpponentTurn());
+    }
+    public bool CheckIfSomeoneWon(){
+        if(scorePoints >= pointsToWin || oppScorePoints >= pointsToWin){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private IEnumerator OpponentTurn(){
         float seconds = 2f;
         float timer = 0f;
         float something = 0.1f;
+
+        hardScorePoints = 0;
+        hardScoreText.text = "0";
+        OppHardScore.text = "0";
 
         // Changing text to opponent
         if(CurrentlyOpponentTurn){
@@ -476,24 +501,36 @@ public class LogicScript : MonoBehaviour
             CurrentlyOpponentTurn = true;
         }
 
+        // Removing UI elements
+        foreach(var ui in uiElements){
+            ui.SetActive(false);
+        }
+
+        if(busted){
+            bustPanel.SetActive(true);
+            while(timer < seconds){
+                timer += something + Time.deltaTime;
+                yield return new WaitForSeconds(0.1f);
+            }
+            busted = false;
+        }
+
         // Destroying previous dice to start anew
         foreach(var x in dice){
             Destroy(x);
         }
         dice.Clear();
 
-        // Removing UI elements
-        foreach(var ui in uiElements){
-            ui.SetActive(false);
-        }
         passButton.SetActive(false);
         rollAgainButton.SetActive(false);
 
         // Switching sides screen for 2 seconds
-        switchingSides.SetActive(true);
-        while (timer < seconds){
-            timer += something + Time.deltaTime;
-            yield return new WaitForSeconds(0.1f);
+        if(!busted){
+            switchingSides.SetActive(true);
+            while (timer < seconds){
+                timer += something + Time.deltaTime;
+                yield return new WaitForSeconds(0.1f);
+            }
         }
 
         // UI elements are activated again
@@ -505,6 +542,7 @@ public class LogicScript : MonoBehaviour
         // Create new set of dice
         CreateDiceSet();
         // RollDiceButton.SetActive(false);
+        bustPanel.SetActive(false);
         switchingSides.SetActive(false);
         // Opponent.GetComponent<OpponentScript>().OpponentTurn();
     }
