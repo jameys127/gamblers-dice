@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class LogicScript : MonoBehaviour
 {
-    // UI AND GLOBAL VARIABLES
+    //UI AND GLOBAL VARIABLES
     private int round = 1;
     private int nextAvailabelId = 0;
     public float leftMostPoint = -20;
@@ -17,7 +17,7 @@ public class LogicScript : MonoBehaviour
     private int scorePoints = 0;
     private int oppScorePoints = 0;
 
-    // Player UI
+    //Player UI
     public TextMeshProUGUI softScoreText;
     public TextMeshProUGUI hardScoreText;
     public TextMeshProUGUI scoreText;
@@ -33,9 +33,9 @@ public class LogicScript : MonoBehaviour
     private bool canBeSelected = false;
     private bool CurrentlyOpponentTurn = false;
     private bool busted = false;
-    // END UI GLOBAL VARIABLES
+    //END UI GLOBAL VARIABLES
 
-    // GAME OBJECTS AND DICE COUNTERS
+    //GAME OBJECTS AND DICE COUNTERS
     public GameObject die;
     public GameObject Opponent;
     private List<GameObject> dice = new List<GameObject>();
@@ -50,14 +50,16 @@ public class LogicScript : MonoBehaviour
     //END GAME OBJECTS AND DICE COUNTERS
     
     //DICTIONARIES FOR DICE AND POINTS
-    private Dictionary<int, int> diceSelectedForPoints = new Dictionary<int, int>();
+    public Dictionary<int, int> diceSelectedForPoints = new Dictionary<int, int>();
     private Dictionary<int, int> threeOfAKindScores;
     private Dictionary<int, int> singlesPoints;
     private Dictionary<int, int> pointMultipliers;
     private Dictionary<int, int> fiveHundredComboWithStragglerOne;
     private Dictionary<int, int> fiveHundredComboWithStragglerFive;
     private Dictionary<int, int> sevenHundredComboWithStragglerFive;
-    //DICTIONARIES FOR DICE AND POINTS
+    //END DICTIONARIES FOR DICE AND POINTS
+
+    OpponentScript opponentScript = new OpponentScript();
 
 
     void Start()
@@ -304,8 +306,10 @@ public class LogicScript : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         Dictionary<int, int> dummy = new Dictionary<int, int>(diceSelectedForPoints);
         Dictionary<int, int> diceCombo = new Dictionary<int, int>();
-        foreach(var key in dummy.Keys){
-            RemoveDiceSelectedForPoints(key);
+        if(!CurrentlyOpponentTurn){    
+            foreach(var key in dummy.Keys){
+                RemoveDiceSelectedForPoints(key);
+            }
         }
         foreach (var value in dummy.Values){
             int increm;
@@ -510,13 +514,13 @@ public class LogicScript : MonoBehaviour
         // Changing text to opponent
         if(CurrentlyOpponentTurn){
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Your Turn";
-            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nScore: " + oppScorePoints;
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nOpponent's Score: " + oppScorePoints;
             CurrentlyOpponentTurn = false;
             round++;
             uiElements[2].GetComponent<TextMeshProUGUI>().text = round.ToString();
         } else {
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Opponent's Turn";
-            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn\nScore: " + scorePoints;
+            switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn\nYour Score: " + scorePoints;
             CurrentlyOpponentTurn = true;
         }
 
@@ -564,6 +568,7 @@ public class LogicScript : MonoBehaviour
         // RollDiceButton.SetActive(false);
         bustPanel.SetActive(false);
         switchingSides.SetActive(false);
+        opponentScript.OpponentTurn(this);
         // Opponent.GetComponent<OpponentScript>().OpponentTurn();
     }
 
