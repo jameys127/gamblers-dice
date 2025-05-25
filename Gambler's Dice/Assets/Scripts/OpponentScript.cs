@@ -6,6 +6,7 @@ public class OpponentScript : MonoBehaviour
 {
     LogicScript logicScript;
     public float timeBetweenSelections;
+    Dictionary<int, int> diceIDandSides;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,7 @@ public class OpponentScript : MonoBehaviour
 
     public void OpponentTurn(LogicScript logic){
         logicScript = logic;
+        diceIDandSides = new Dictionary<int, int>(logicScript.diceSelectedForPoints);
         StartCoroutine(StartYourTurn());
     }
 
@@ -53,9 +55,9 @@ public class OpponentScript : MonoBehaviour
         // } 
     }
 
-    private void AnalyzeRoll(){
-        Dictionary<int, int> diceIDandSides = new Dictionary<int, int>(logicScript.diceSelectedForPoints);
+    private PointCombos AnalyzeRoll(){
 
+        //analyzing possible single die selection point totals
         int oneCounter = 0;
         int fiveCounter = 0;
         int singlePointTotal = 0;
@@ -72,6 +74,59 @@ public class OpponentScript : MonoBehaviour
             }
         }
 
+        //analyzing possible combo point totals
+        int comboPointTotal = 0;
+        ArrayList comboPointSides = new ArrayList();
+        Dictionary<int, int> sidesAndFrequency = new Dictionary<int, int>();
+        foreach(var value in diceIDandSides.Values){
+            int increm;
+            if(sidesAndFrequency.TryGetValue(value, out increm)){
+                increm++;
+                sidesAndFrequency[value] = increm;
+            }else{
+                sidesAndFrequency.Add(value, 1);
+            }
+        }
+        foreach(var pair in sidesAndFrequency){
+            int diceSide = pair.Key;
+            int frequency = pair.Value;
+            if(frequency >= 3){
+                int baseScore = logicScript.threeOfAKindScores[diceSide];
+                int multiplier = logicScript.pointMultipliers[frequency];
+                comboPointTotal += baseScore * multiplier;
+                comboPointSides.Add(diceSide);
+            }
+        }
+
+        //analyzing possible straights 5 and 6
+        int fiveStraight = 0;
+        int sixStraight = 0;
+        ArrayList fiveStraightSides = new ArrayList();
+        if(sidesAndFrequency.Count == 6){
+            sixStraight = 1500;
+        }else if(sidesAndFrequency.Count == 5){
+            if(sidesAndFrequency.TryGetValue(1, out _)){
+                fiveStraight = 500;
+                fiveStraightSides.Add(1);
+                fiveStraightSides.Add(2);
+                fiveStraightSides.Add(3);
+                fiveStraightSides.Add(4);
+                fiveStraightSides.Add(5);
+            }else{
+                fiveStraight = 750;
+                fiveStraightSides.Add(2);
+                fiveStraightSides.Add(3);
+                fiveStraightSides.Add(4);
+                fiveStraightSides.Add(5);
+                fiveStraightSides.Add(6);
+            }
+        }
+
+        PointCombos pointCombos = new PointCombos(singlePointTotal, singlePointSides,
+                                                  comboPointTotal, comboPointSides, 
+                                                  fiveStraight, fiveStraightSides, 
+                                                  sixStraight);
+        return pointCombos;
 
     }
 

@@ -51,12 +51,12 @@ public class LogicScript : MonoBehaviour
     
     //DICTIONARIES FOR DICE AND POINTS
     public Dictionary<int, int> diceSelectedForPoints = new Dictionary<int, int>();
-    private Dictionary<int, int> threeOfAKindScores;
+    public Dictionary<int, int> threeOfAKindScores;
     private Dictionary<int, int> singlesPoints;
-    private Dictionary<int, int> pointMultipliers;
-    private Dictionary<int, int> fiveHundredComboWithStragglerOne;
-    private Dictionary<int, int> fiveHundredComboWithStragglerFive;
-    private Dictionary<int, int> sevenHundredComboWithStragglerFive;
+    public Dictionary<int, int> pointMultipliers;
+    public Dictionary<int, int> fiveHundredComboWithStragglerOne;
+    public Dictionary<int, int> fiveHundredComboWithStragglerFive;
+    public Dictionary<int, int> sevenHundredComboWithStragglerFive;
     //END DICTIONARIES FOR DICE AND POINTS
 
     OpponentScript opponentScript = new OpponentScript();
