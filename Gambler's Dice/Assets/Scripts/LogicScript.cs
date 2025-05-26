@@ -31,7 +31,7 @@ public class LogicScript : MonoBehaviour
     public GameObject bustPanel;
     public List<GameObject> uiElements;
     private bool canBeSelected = false;
-    private bool CurrentlyOpponentTurn = false;
+    public bool CurrentlyOpponentTurn = false;
     private bool busted = false;
     //END UI GLOBAL VARIABLES
 
@@ -39,7 +39,7 @@ public class LogicScript : MonoBehaviour
     public GameObject die;
     public GameObject Opponent;
     private List<GameObject> dice = new List<GameObject>();
-    private int diceInPlay;
+    public int diceInPlay;
     private int rollingCounter;
     public GameObject gameOver;
     public GameObject youWon;
@@ -59,7 +59,6 @@ public class LogicScript : MonoBehaviour
     public Dictionary<int, int> sevenHundredComboWithStragglerFive;
     //END DICTIONARIES FOR DICE AND POINTS
 
-    OpponentScript opponentScript = new OpponentScript();
 
 
     void Start()
@@ -163,6 +162,7 @@ public class LogicScript : MonoBehaviour
     }
 
     public void RollDice(){
+        Debug.Log($"OpponentTurn() called, CurrentlyOpponentTurn = {CurrentlyOpponentTurn}");
         diceSelectedForPoints.Clear();
         var diceToRoll = GameObject.FindGameObjectsWithTag("Dice");
         foreach(var die in diceToRoll){
@@ -182,7 +182,7 @@ public class LogicScript : MonoBehaviour
                 return i;
             }
         }
-        return -1;
+        throw new Exception("this error was reached somehow");
     }
     public void SetDiceSelectedForPoints(int id, int side){
         diceSelectedForPoints.Add(id, side);
@@ -306,10 +306,8 @@ public class LogicScript : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         Dictionary<int, int> dummy = new Dictionary<int, int>(diceSelectedForPoints);
         Dictionary<int, int> diceCombo = new Dictionary<int, int>();
-        if(!CurrentlyOpponentTurn){    
-            foreach(var key in dummy.Keys){
-                RemoveDiceSelectedForPoints(key);
-            }
+        foreach(var key in dummy.Keys){
+            RemoveDiceSelectedForPoints(key);
         }
         foreach (var value in dummy.Values){
             int increm;
@@ -445,6 +443,7 @@ public class LogicScript : MonoBehaviour
         if(diceInPlay == 0){
             CreateDiceSet();
         }
+        diceSelectedForPoints.Clear();
     }
 
     public void ScoreAndPass(){
@@ -492,6 +491,7 @@ public class LogicScript : MonoBehaviour
                 return;
             }
         }
+        diceSelectedForPoints.Clear();
         StartCoroutine(OpponentTurn());
     }
     public bool CheckIfSomeoneWon(){
@@ -515,13 +515,11 @@ public class LogicScript : MonoBehaviour
         if(CurrentlyOpponentTurn){
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Your Turn";
             switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Your Turn\nOpponent's Score: " + oppScorePoints;
-            CurrentlyOpponentTurn = false;
             round++;
             uiElements[2].GetComponent<TextMeshProUGUI>().text = round.ToString();
         } else {
             uiElements[5].GetComponent<TextMeshProUGUI>().text = "Opponent's Turn";
             switchingSides.GetComponentInChildren<TextMeshProUGUI>().text = "Opponent's Turn\nYour Score: " + scorePoints;
-            CurrentlyOpponentTurn = true;
         }
 
         // Removing UI elements
@@ -568,7 +566,12 @@ public class LogicScript : MonoBehaviour
         // RollDiceButton.SetActive(false);
         bustPanel.SetActive(false);
         switchingSides.SetActive(false);
-        opponentScript.OpponentTurn(this);
+        if(!CurrentlyOpponentTurn){
+            CurrentlyOpponentTurn = true;
+            Opponent.GetComponent<OpponentScript>().OpponentTurn(this);
+        }else{
+            CurrentlyOpponentTurn = false;
+        }
         // Opponent.GetComponent<OpponentScript>().OpponentTurn();
     }
 
