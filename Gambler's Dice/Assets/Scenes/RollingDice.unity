@@ -439,7 +439,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7872397c58e29e241ae06c27a6484330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logicManager: {fileID: 1635480235}
   timeBetweenSelections: 0.5
 --- !u!4 &207569530
 Transform:
@@ -2635,6 +2634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftMostPoint: -20
+  pointsToWin: 2000
   softScoreText: {fileID: 1783685172}
   hardScoreText: {fileID: 62523439}
   scoreText: {fileID: 1954945193}
@@ -2651,8 +2651,10 @@ MonoBehaviour:
   - {fileID: 1783685170}
   - {fileID: 1294835872}
   - {fileID: 524427516}
+  CurrentlyOpponentTurn: 0
   die: {fileID: 4200671857242446458, guid: db653b48b9c2c08428d660df5f6383d5, type: 3}
   Opponent: {fileID: 207569528}
+  diceInPlay: 0
   gameOver: {fileID: 784033690}
   youWon: {fileID: 1854977585}
   startButton: {fileID: 67816644}

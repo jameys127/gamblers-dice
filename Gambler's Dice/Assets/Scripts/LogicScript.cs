@@ -12,7 +12,7 @@ public class LogicScript : MonoBehaviour
     private int round = 1;
     private int nextAvailabelId = 0;
     public float leftMostPoint = -20;
-    private int pointsToWin = 1000;
+    public int pointsToWin = 1000;
     private int hardScorePoints = 0;
     private int scorePoints = 0;
     private int oppScorePoints = 0;
