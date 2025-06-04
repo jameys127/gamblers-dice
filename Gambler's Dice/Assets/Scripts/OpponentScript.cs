@@ -32,7 +32,7 @@ public class OpponentScript : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         logicScript.RollDice();
         Debug.Log("rolling...");
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.5f);
         if (!logicScript.CurrentlyOpponentTurn){
             Debug.Log("breaking out of opponent coroutine");
             yield break;
@@ -170,141 +170,22 @@ public class OpponentScript : MonoBehaviour
             }
         }
         return listOfCombos;
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // //analyzing possible single die selection point totals
-        // int oneCounter = 0;
-        // int fiveCounter = 0;
-        // int singlePointTotal = 0;
-        // Dictionary<int, int> singlePointSides = new Dictionary<int, int>();
-        // foreach(var pair in diceIDandSides){
-        //     if(pair.Value == 1 && oneCounter < 3){
-        //         oneCounter++;
-        //         singlePointTotal += 100;
-        //         singlePointSides.Add(pair.Key, pair.Value);
-        //     }else if(pair.Value == 5 && fiveCounter < 3){
-        //         fiveCounter++;
-        //         singlePointTotal += 50;
-        //         singlePointSides.Add(pair.Key, pair.Value);
-        //     }
-        // }
-
-        // //analyzing possible combo point totals
-        // int comboPointTotal = 0;
-        // Dictionary<int, int> comboPointSides = new Dictionary<int, int>();
-        // Dictionary<int, int> sidesAndFrequency = new Dictionary<int, int>();
-        // foreach(var pair in diceIDandSides){
-        //     int increm;
-        //     if(sidesAndFrequency.TryGetValue(pair.Value, out increm)){
-        //         increm++;
-        //         sidesAndFrequency[pair.Value] = increm;
-        //     }else{
-        //         sidesAndFrequency.Add(pair.Value, 1);
-        //     }
-        // }
-        // foreach(var pair in sidesAndFrequency){
-        //     int diceSide = pair.Key;
-        //     int frequency = pair.Value;
-        //     if(frequency >= 3){
-        //         int baseScore = logicScript.threeOfAKindScores[diceSide];
-        //         int multiplier = logicScript.pointMultipliers[frequency];
-        //         comboPointTotal += baseScore * multiplier;
-        //         // comboPointSides.Add(diceSide);
-        //         foreach(int key in diceIDandSides.Keys){
-        //             if(diceIDandSides[key] == diceSide){
-        //                 comboPointSides.Add(key, diceIDandSides[key]);
-        //             }
-        //         }
-        //     }
-        // }
-
-        // //analyzing possible straights 5 and 6
-        // int fiveStraight = 0;
-        // int sixStraight = 0;
-        // int straightWithStraggler = 0;
-        // Dictionary<int, int> fiveStraightSides = new Dictionary<int, int>();
-        // if(sidesAndFrequency.Count == 6){
-        //     sixStraight = 1500;
-        // }else if(sidesAndFrequency.Count == 5){
-        //     if(logicScript.CheckStragglersForPoints(sidesAndFrequency, logicScript.fiveHundredComboWithStragglerFive)){
-        //         straightWithStraggler = 550;
-        //     }else if(logicScript.CheckStragglersForPoints(sidesAndFrequency, logicScript.fiveHundredComboWithStragglerOne)){
-        //         straightWithStraggler = 600;
-        //     }else if(logicScript.CheckStragglersForPoints(sidesAndFrequency, logicScript.sevenHundredComboWithStragglerFive)){
-        //         straightWithStraggler = 800;
-        //     }else if(sidesAndFrequency.TryGetValue(1, out _) && !sidesAndFrequency.ContainsKey(6)){
-        //         fiveStraight = 500;
-        //         foreach(int key in diceIDandSides.Keys){
-        //             foreach(int side in sidesAndFrequency.Keys){
-        //                 if(diceIDandSides[key] == side){
-        //                     if(!fiveStraightSides.ContainsValue(side)){
-        //                         fiveStraightSides.Add(key, side);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }else{
-        //         fiveStraight = 750;
-        //         foreach(int key in diceIDandSides.Keys){
-        //             foreach(int side in sidesAndFrequency.Keys){
-        //                 if(diceIDandSides[key] == side){
-        //                     if(!fiveStraightSides.ContainsValue(side)){
-        //                         fiveStraightSides.Add(key, side);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // PointCombos pointCombos = new PointCombos(singlePointTotal, singlePointSides,
-        //                                           comboPointTotal, comboPointSides, 
-        //                                           fiveStraight, fiveStraightSides, 
-        //                                           sixStraight, straightWithStraggler);
-        // return pointCombos;
-
     }
 
-    private Dictionary<int, int> PickBestCombo(PointCombos pointCombo){
-
-        if(pointCombo.sixStraight != 0 || pointCombo.straightWithStraggeler != 0){
-            pressContinue = true;
-            return diceIDandSides;
-        }else{
-            Dictionary<int, String> highestScore = pointCombo.returnHighestScore();
-            if(highestScore.ContainsValue("single")){
-                if(logicScript.diceInPlay - pointCombo.singlePointSides.Count >= 3){
-                    pressContinue = true;
-                }else{
-                    pressContinue = false;
-                }
-                return pointCombo.singlePointSides;
-            }else if(highestScore.ContainsValue("combo")){
-                if(logicScript.diceInPlay - pointCombo.comboPointSides.Count >= 3){
-                    pressContinue = true;
-                }else{
-                    pressContinue = false;
-                }
-                return pointCombo.comboPointSides;
-            }else{
-                if(logicScript.diceInPlay - pointCombo.singlePointSides.Count == 0){
-                    pressContinue = true;
-                }else{
-                    pressContinue = false;
-                }
-                return pointCombo.fiveStraightSides;
+    private Dictionary<int, int> PickBestCombo(List<PointCombos> pointCombo){
+        PointCombos bestOption = null;
+        int bestScore = 0;
+        foreach (var combo in pointCombo){
+            if(combo.points + ((logicScript.diceInPlay - combo.DiceUsed) * 75) > bestScore){
+                bestScore = combo.points + ((logicScript.diceInPlay - combo.DiceUsed) * 75);
+                bestOption = combo;
             }
         }
+        if(logicScript.diceInPlay - bestOption.DiceUsed >= 3){
+            pressContinue = true;
+        }else{
+            pressContinue = false;
+        }
+        return bestOption.diceToSelect;
     }
 }
